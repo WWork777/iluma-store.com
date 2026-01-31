@@ -893,7 +893,6 @@ ${formattedCart}
                     telegram: "@" + (value || ""),
                   }));
 
-                  // Устанавливаем курсор после @
                   setTimeout(() => {
                     e.target.setSelectionRange(1, 1);
                   }, 0);
