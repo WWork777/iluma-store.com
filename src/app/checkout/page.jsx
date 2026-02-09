@@ -39,79 +39,12 @@ const CheckoutPage = () => {
 
   const [errors, setErrors] = useState({});
 
-  const scroolTo = (element) => {
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-      element.focus();
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    let element;
-
-    // Валидация только телефона
-    if (!formData.phoneNumber) {
-      element = document.querySelector(
-        `[placeholder="Введите номер телефона"]`,
-      );
-      scroolTo(element);
-      newErrors.phoneNumber = "Введите номер телефона";
-    } else if (formData.phoneNumber.replace(/\D/g, "").length < 11) {
-      element = document.querySelector(
-        `[placeholder="Введите номер телефона"]`,
-      );
-      scroolTo(element);
-      newErrors.phoneNumber = "Некорректный номер телефона";
-    }
-
-    // Валидация только Telegram (если указан)
-    if (
-      formData.telegram.trim() &&
-      !/^[@a-zA-Z0-9_]{5,32}$/.test(formData.telegram.replace(/^@/, ""))
-    ) {
-      newErrors.telegram = "Некорректный формат Telegram username";
-    }
-
-    // Убрана валидация имени, города, адреса и согласия с политикой
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    let isValid = true;
-
-    if (name === "telegram") {
-      // Разрешаем латиницу, цифры, нижние подчеркивания и символ @ в начале
-      isValid = /^@?[a-zA-Z0-9_]*$/.test(value);
-    } else if (name === "lastName") {
-      isValid = /^[a-zA-Zа-яА-ЯёЁ0-9\s-]*$/.test(value);
-    } else if (name === "city") {
-      isValid = /^[а-яА-ЯёЁ0-9\s-]*$/.test(value);
-    } else if (name === "streetAddress") {
-      isValid = /^[а-яА-ЯёЁ0-9\s-]*$/.test(value);
-    }
-
-    if (isValid) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-
-      // Очищаем ошибку при вводе
-      if (errors[name]) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: "",
-        }));
-      }
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handlePhoneChange = (value) => {
@@ -119,44 +52,13 @@ const CheckoutPage = () => {
       ...prev,
       phoneNumber: value,
     }));
-    if (errors.phoneNumber) {
-      setErrors((prev) => ({
-        ...prev,
-        phoneNumber: "",
-      }));
-    }
-  };
-
-  // Функция для сохранения заказа в базу данных
-  const saveOrderToDatabase = async (orderData) => {
-    try {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Database error: ${JSON.stringify(errorData)}`);
-      }
-
-      const result = await response.json();
-      console.log("Order saved to database:", result);
-      return result;
-    } catch (error) {
-      console.error("Error saving order to database:", error);
-      throw error;
-    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Минимальная валидация - только телефон
+    // Минимальная проверка телефона
     if (!formData.phoneNumber) {
       alert("Введите номер телефона");
       setLoading(false);
@@ -173,6 +75,7 @@ const CheckoutPage = () => {
     const totalPrice = calculateTotalPrice();
     const site = "iqos-iluma.com";
 
+    // Список городов Москвы (сокращен для читаемости)
     const moscowCities = [
       "москва",
       "зеленоград",
@@ -656,7 +559,7 @@ const CheckoutPage = () => {
       )
       .join("\n");
 
-    // Форматируем Telegram username (добавляем @ если его нет)
+    // Форматируем Telegram username
     const telegramUsername = formData.telegram.trim()
       ? formData.telegram.startsWith("@")
         ? formData.telegram
@@ -726,7 +629,7 @@ ${formattedCart}
                 error: error.message,
               };
             }
-            // Ждем перед следующей попыткой (1s, 2s, 4s)
+            // Ждем перед следующей попыткой
             await new Promise((resolve) =>
               setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)),
             );
@@ -780,29 +683,27 @@ ${formattedCart}
         }, "Email"),
       );
 
-      // 3. WhatsApp (если номер валидный)
-      if (phoneDigits.length >= 11) {
-        sendPromises.push(
-          sendWithRetry(async () => {
-            const response = await fetch(
-              `https://api.green-api.com/waInstance1103290542/SendMessage/65dee4a31f1342768913a5557afc548591af648dffc44259a6`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  chatId: `${formData.phoneNumber}@c.us`,
-                  message: mess,
-                }),
-              },
-            );
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`Status: ${response.status}, ${errorText}`);
-            }
-            return await response.json();
-          }, "WhatsApp"),
-        );
-      }
+      // 3. WhatsApp
+      sendPromises.push(
+        sendWithRetry(async () => {
+          const response = await fetch(
+            `https://api.green-api.com/waInstance1103290542/SendMessage/65dee4a31f1342768913a5557afc548591af648dffc44259a6`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chatId: `${formData.phoneNumber}@c.us`,
+                message: mess,
+              }),
+            },
+          );
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Status: ${response.status}, ${errorText}`);
+          }
+          return await response.json();
+        }, "WhatsApp"),
+      );
 
       // Ждем результаты всех отправок
       const results = await Promise.allSettled(sendPromises);
@@ -812,61 +713,13 @@ ${formattedCart}
         (r) => r.status === "fulfilled" && r.value?.success === true,
       );
 
-      const failedSends = results.filter(
-        (r) => r.status === "fulfilled" && r.value?.success === false,
-      );
-
       console.log("Результаты отправки:", {
         успешно: successfulSends.length,
-        неудачно: failedSends.length,
         детали: results.map((r) => ({
           service: r.status === "fulfilled" ? r.value.service : "unknown",
           success: r.status === "fulfilled" ? r.value.success : false,
-          error: r.status === "fulfilled" ? r.value.error : "promise rejected",
         })),
       });
-
-      // Сохраняем в базу данных (если получится, но не критично)
-      try {
-        const phoneE164 = `+${phoneDigits}`;
-        const orderData = {
-          customer_name: formData.lastName || "Не указано",
-          phone_number: phoneE164,
-          is_delivery: selectedMethod === "delivery",
-          city:
-            formData.city ||
-            (selectedMethod === "delivery" ? "Не указано" : "Москва"),
-          total_amount: totalPrice,
-          address:
-            formData.streetAddress ||
-            (selectedMethod === "delivery" ? "Не указано" : "Самовывоз"),
-          ordered_items: cartItems.map((item) => ({
-            product_name: `${item.name} (${item.type || "обычный"})`,
-            quantity: item.quantity,
-            price_at_time_of_order: item.price,
-          })),
-          is_first_order: 1,
-          channels_sent: successfulSends.map((s) =>
-            s.status === "fulfilled" ? s.value.service : "unknown",
-          ),
-          timestamp: new Date().toISOString(),
-        };
-
-        const dbResponse = await fetch("/api/orders", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData),
-        });
-
-        if (dbResponse.ok) {
-          console.log("Заказ сохранен в базу данных");
-        } else {
-          console.log("Заказ не сохранен в базу (но это не критично)");
-        }
-      } catch (dbError) {
-        console.error("Ошибка при сохранении в базу:", dbError);
-        // Продолжаем, даже если база не сохранилась
-      }
 
       // Проверяем, отправилось ли хотя бы в один канал
       if (successfulSends.length > 0) {
@@ -878,7 +731,6 @@ ${formattedCart}
         );
       } else {
         console.warn("Заказ не отправлен ни в один канал");
-        // Сохраняем заказ для ручной отправки
         localStorage.setItem(
           "failed_order",
           JSON.stringify({
@@ -899,7 +751,6 @@ ${formattedCart}
     } catch (error) {
       console.error("Критическая ошибка при обработке заказа:", error);
 
-      // Сохраняем заказ для последующей обработки
       localStorage.setItem(
         "failed_order",
         JSON.stringify({
@@ -946,11 +797,6 @@ ${formattedCart}
               value={formData.lastName}
               onChange={handleInputChange}
             />
-            {errors.lastName && (
-              <p className="error" style={{ color: "red" }}>
-                {errors.lastName}
-              </p>
-            )}
 
             <input
               type="text"
@@ -959,7 +805,6 @@ ${formattedCart}
               value={formData.telegram}
               onChange={handleInputChange}
               onFocus={(e) => {
-                // Если поле пустое или не начинается с @, добавляем @
                 const value = formData.telegram;
                 if (!value.startsWith("@")) {
                   setFormData((prev) => ({
@@ -967,14 +812,12 @@ ${formattedCart}
                     telegram: "@" + (value || ""),
                   }));
 
-                  // Устанавливаем курсор после @
                   setTimeout(() => {
                     e.target.setSelectionRange(1, 1);
                   }, 0);
                 }
               }}
               onBlur={(e) => {
-                // Если только @, очищаем поле
                 if (formData.telegram === "@") {
                   setFormData((prev) => ({
                     ...prev,
@@ -983,11 +826,6 @@ ${formattedCart}
                 }
               }}
             />
-            {errors.telegram && (
-              <p className="error" style={{ color: "red" }}>
-                {errors.telegram}
-              </p>
-            )}
 
             <PhoneInput
               country={"ru"}
@@ -1003,11 +841,6 @@ ${formattedCart}
               }}
               placeholder="Введите номер телефона"
             />
-            {errors.phoneNumber && (
-              <p className="error" style={{ color: "red" }}>
-                {errors.phoneNumber}
-              </p>
-            )}
           </div>
 
           <div className="checkout-delivery">
@@ -1060,11 +893,6 @@ ${formattedCart}
                     onlyPacksAndBlocks && totalQuantity < 10 && !hasBlock
                   }
                 />
-                {errors.city && (
-                  <p className="error" style={{ color: "red" }}>
-                    {errors.city}
-                  </p>
-                )}
 
                 <input
                   type="text"
@@ -1076,11 +904,6 @@ ${formattedCart}
                     onlyPacksAndBlocks && totalQuantity < 10 && !hasBlock
                   }
                 />
-                {errors.streetAddress && (
-                  <p className="error" style={{ color: "red" }}>
-                    {errors.streetAddress}
-                  </p>
-                )}
               </div>
             )}
 
@@ -1125,7 +948,6 @@ ${formattedCart}
               <p>Итого:</p>
               <p>{calculateTotalPrice()} ₽</p>
             </div>
-            {/* Убрана секция с чекбоксом согласия */}
             <button
               onClick={handleExternalSubmit}
               disabled={loading || selectedMethod === "pickup"}

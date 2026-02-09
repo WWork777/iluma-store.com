@@ -6,7 +6,7 @@ export async function POST(req) {
   try {
     // Извлекаем данные из тела запроса
     const body = await req.json();
-    
+
     // Получаем текст сообщения из поля 'text'
     const { text } = body;
 
@@ -14,14 +14,14 @@ export async function POST(req) {
     if (!text || text.trim() === "") {
       return NextResponse.json(
         { error: "Текст сообщения обязателен" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (text.length > 10000) {
       return NextResponse.json(
         { error: "Сообщение слишком длинное" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,15 +42,15 @@ export async function POST(req) {
     // Извлекаем информацию из текста
     let subject = "Заявка с сайта iluma-store";
     let customerName = "Клиент";
-    
+
     // Поиск имени в тексте
     const nameMatch = text.match(/Имя:\s*(.+?)(?:\n|$)/);
     if (nameMatch && nameMatch[1]) {
       customerName = nameMatch[1].trim();
     }
-    
+
     // Поиск нового/повторного клиента
-    if (text.includes('НОВЫЙ КЛИЕНТ') || text.includes('🔥 НОВЫЙ КЛИЕНТ 🔥')) {
+    if (text.includes("НОВЫЙ КЛИЕНТ") || text.includes("🔥 НОВЫЙ КЛИЕНТ 🔥")) {
       subject = `🔥 НОВЫЙ КЛИЕНТ: ${customerName} - iluma-store`;
     } else {
       subject = `Заявка от ${customerName} - iluma-store`;
@@ -58,14 +58,14 @@ export async function POST(req) {
 
     // Форматируем текст для HTML с сохранением переносов
     const formattedText = escapeHtml(text)
-      .replace(/\n/g, '<br>')
-      .replace(/🔥/g, '🔥')
-      .replace(/📋/g, '📋')
-      .replace(/✅/g, '✅')
-      .replace(/⚠️/g, '⚠️')
-      .replace(/❗️/g, '❗️')
-      .replace(/❌/g, '❌')
-      .replace(/😊/g, '😊');
+      .replace(/\n/g, "<br>")
+      .replace(/🔥/g, "🔥")
+      .replace(/📋/g, "📋")
+      .replace(/✅/g, "✅")
+      .replace(/⚠️/g, "⚠️")
+      .replace(/❗️/g, "❗️")
+      .replace(/❌/g, "❌")
+      .replace(/😊/g, "😊");
 
     const html = `
       <!DOCTYPE html>
@@ -168,11 +168,12 @@ export async function POST(req) {
             </div>
             
             <div class="email-content">
-              ${text.includes('🔥 НОВЫЙ КЛИЕНТ 🔥') 
-                ? '<div class="customer-badge new-customer">🔥 НОВЫЙ КЛИЕНТ 🔥</div>' 
-                : text.includes('📋 Повторный заказ') 
-                  ? '<div class="customer-badge returning-customer">📋 ПОВТОРНЫЙ ЗАКАЗ</div>' 
-                  : ''
+              ${
+                text.includes("🔥 НОВЫЙ КЛИЕНТ 🔥")
+                  ? '<div class="customer-badge new-customer">🔥 НОВЫЙ КЛИЕНТ 🔥</div>'
+                  : text.includes("📋 Повторный заказ")
+                    ? '<div class="customer-badge returning-customer">📋 ПОВТОРНЫЙ ЗАКАЗ</div>'
+                    : ""
               }
               
               <div class="order-info">
@@ -182,33 +183,43 @@ export async function POST(req) {
                 </div>
                 
                 ${(() => {
-                  const phoneMatch = text.match(/Телефон:\s*\+?(\d[\d\s\-\(\)]+)/);
-                  return phoneMatch ? `
+                  const phoneMatch = text.match(
+                    /Телефон:\s*\+?(\d[\d\s\-\(\)]+)/,
+                  );
+                  return phoneMatch
+                    ? `
                     <div class="info-row">
                       <span class="label">Телефон:</span>
                       <span>${escapeHtml(phoneMatch[1])}</span>
                     </div>
-                  ` : '';
+                  `
+                    : "";
                 })()}
                 
                 ${(() => {
                   const telegramMatch = text.match(/Telegram:\s*(@?[\w\d_]+)/);
-                  return telegramMatch ? `
+                  return telegramMatch
+                    ? `
                     <div class="info-row">
                       <span class="label">Telegram:</span>
                       <span>${escapeHtml(telegramMatch[1])}</span>
                     </div>
-                  ` : '';
+                  `
+                    : "";
                 })()}
                 
                 ${(() => {
-                  const methodMatch = text.match(/Способ доставки:\s*(.+?)(?:\n|$)/);
-                  return methodMatch ? `
+                  const methodMatch = text.match(
+                    /Способ доставки:\s*(.+?)(?:\n|$)/,
+                  );
+                  return methodMatch
+                    ? `
                     <div class="info-row">
                       <span class="label">Доставка:</span>
                       <span>${escapeHtml(methodMatch[1])}</span>
                     </div>
-                  ` : '';
+                  `
+                    : "";
                 })()}
               </div>
               
@@ -219,12 +230,12 @@ export async function POST(req) {
               
               <div class="footer">
                 <p>Отправлено с сайта iqos-iluma.com</p>
-                <p>${new Date().toLocaleString('ru-RU', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
+                <p>${new Date().toLocaleString("ru-RU", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}</p>
               </div>
             </div>
@@ -240,35 +251,36 @@ export async function POST(req) {
       // text, // plain text версия
       html,
       headers: {
-        'Content-Type': 'text/html; charset=UTF-8',
-        'Content-Transfer-Encoding': 'quoted-printable',
-        'X-Mailer': 'Iluma Store Contact Form'
-      }
+        "Content-Type": "text/html; charset=UTF-8",
+        "Content-Transfer-Encoding": "quoted-printable",
+        "X-Mailer": "Iluma Store Contact Form",
+      },
     };
 
     await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ 
-      ok: true, 
-      message: "Письмо успешно отправлено" 
+    return NextResponse.json({
+      ok: true,
+      message: "Письмо успешно отправлено",
     });
   } catch (err) {
     console.error("EMAIL_SEND_ERROR:", err);
-    
+
     let errorMessage = "Ошибка отправки письма";
-    
-    if (err.code === 'EAUTH') {
+
+    if (err.code === "EAUTH") {
       errorMessage = "Ошибка авторизации почтового сервера";
-    } else if (err.code === 'ECONNECTION') {
+    } else if (err.code === "ECONNECTION") {
       errorMessage = "Не удалось подключиться к почтовому серверу";
     }
-    
+
     return NextResponse.json(
-      { 
+      {
         error: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+        details:
+          process.env.NODE_ENV === "development" ? err.message : undefined,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -288,10 +300,10 @@ function escapeHtml(s) {
 // Опционально: поддержка других HTTP методов
 export async function GET() {
   return NextResponse.json(
-    { 
+    {
       error: "Метод GET не поддерживается",
-      info: "Для отправки письма используйте POST запрос с JSON телом: { text: 'сообщение' }"
+      info: "Для отправки письма используйте POST запрос с JSON телом: { text: 'сообщение' }",
     },
-    { status: 405 }
+    { status: 405 },
   );
 }
