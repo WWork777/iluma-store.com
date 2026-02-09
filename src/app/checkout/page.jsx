@@ -52,6 +52,79 @@ const CheckoutPage = () => {
     }));
   };
 
+  // Функция для проверки предыдущих заказов
+  const checkPreviousOrders = async (phoneE164) => {
+    try {
+      console.log("Checking orders for phone:", phoneE164);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+      const checkResponse = await fetch(
+        `/api/check-orders?phone=${encodeURIComponent(phoneE164)}`,
+        {
+          cache: "no-store",
+          signal: controller.signal,
+        },
+      );
+
+      clearTimeout(timeoutId);
+
+      if (checkResponse.ok) {
+        const checkData = await checkResponse.json();
+        console.log("Check orders API response:", checkData);
+
+        // Безопасное извлечение данных
+        const previousOrdersCount =
+          parseInt(checkData.previous_orders_count) || 0;
+        const isFirstOrder = previousOrdersCount === 0;
+
+        console.log("Parsed order info:", {
+          previousOrdersCount,
+          isFirstOrder,
+        });
+
+        return {
+          isFirstOrder,
+          previousOrdersCount,
+          success: true,
+          error: null,
+        };
+      } else {
+        const errorText = await checkResponse.text();
+        console.warn(
+          "API check-orders failed:",
+          checkResponse.status,
+          errorText,
+        );
+
+        return {
+          isFirstOrder: true, // По умолчанию считаем новым
+          previousOrdersCount: 0,
+          success: false,
+          error: `API error: ${checkResponse.status}`,
+        };
+      }
+    } catch (error) {
+      console.warn("Error checking previous orders:", error);
+
+      // Определяем тип ошибки
+      let errorType = "network_error";
+      if (error.name === "AbortError") {
+        errorType = "timeout_error";
+      } else if (error.name === "TypeError") {
+        errorType = "network_error";
+      }
+
+      return {
+        isFirstOrder: true, // По умолчанию считаем новым
+        previousOrdersCount: 0,
+        success: false,
+        error: `${errorType}: ${error.message}`,
+      };
+    }
+  };
+
   // Функция для отправки в Telegram с повторными попытками
   const sendToTelegram = async (message, maxRetries = 3) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -603,9 +676,47 @@ const CheckoutPage = () => {
         : `@${formData.telegram}`
       : "не указан";
 
-    // Формируем сообщение для Telegram
-    const telegramMessage = `
+    console.log("Начинаем отправку заказа...");
+
+    try {
+      // 1. Проверяем предыдущие заказы по телефону
+      const phoneNorm = formData.phoneNumber.replace(/\D/g, "");
+      const phoneE164 = `+${phoneNorm}`;
+
+      console.log("Starting order check...");
+      const orderCheck = await checkPreviousOrders(phoneE164);
+
+      const isFirstOrder = orderCheck.isFirstOrder;
+      const previousOrdersCount = orderCheck.previousOrdersCount;
+      const checkSuccess = orderCheck.success;
+      const checkError = orderCheck.error;
+
+      console.log("Order check completed:", {
+        isFirstOrder,
+        previousOrdersCount,
+        checkSuccess,
+        checkError,
+      });
+
+      // 2. Подготавливаем сообщение для Telegram
+      let headerLine;
+      let statusNote = "";
+
+      if (checkSuccess) {
+        // Если проверка успешна - показываем точный статус
+        headerLine = isFirstOrder
+          ? "🔥 НОВЫЙ КЛИЕНТ 🔥"
+          : `📋 Повторный заказ (${previousOrdersCount + 1}-й по счету)`;
+      } else {
+        // Если проверка не удалась - показываем это в сообщении
+        headerLine = "🟡 КЛИЕНТ (статус не подтвержден)";
+        statusNote = `\n⚠️ Проверка статуса клиента не удалась: ${checkError}`;
+      }
+
+      const telegramMessage = `
 Заказ с сайта ${site}
+
+${headerLine}${statusNote}
 
 Имя: ${formData.lastName || "Не указано"}   
 Телефон: +${formData.phoneNumber}
@@ -617,12 +728,11 @@ ${selectedMethod === "delivery" ? `Город: ${formData.city || "Не указ
 ${formattedCart}
 
 Общая сумма: ${totalPrice} ₽
-    `;
+      `;
 
-    console.log("Начинаем отправку заказа...");
+      console.log("Prepared Telegram message");
 
-    try {
-      // 1. В ПЕРВУЮ ОЧЕРЕДЬ отправляем в Telegram (самое важное!)
+      // 3. В ПЕРВУЮ ОЧЕРЕДЬ отправляем в Telegram (самое важное!)
       console.log("Sending to Telegram (highest priority)...");
       const telegramSent = await sendToTelegram(telegramMessage);
 
@@ -633,7 +743,7 @@ ${formattedCart}
         console.log("SUCCESS: Telegram sent!");
       }
 
-      // 2. Формируем сообщение для WhatsApp
+      // 4. Формируем сообщение для WhatsApp
       let whatsappMessage = "";
       const isMoscowCity = moscowCities.some((city) =>
         (formData.city || "").toLowerCase().includes(city.toLowerCase()),
@@ -647,7 +757,7 @@ ${formattedCart}
         whatsappMessage = `Здравствуйте!\nПолучили ваш заказ с сайта ${site} ✅\n\nВ регионы отправляем через CDEK. Процесс следующий:\n\nВысылаем фото вашего заказа и накладную Cdek (отправка по договору, тарифы минимальные, доставка будет оплачена нами сразу и включена в общий счет).\nВысылаем вам реквизиты для оплаты.\n\nВсе посылки отправляются в день заказа.\nОтправка из Москвы ❗️\nНаложенным платежом не отправляем ❌❌❌\n\nОт Вас нужны след данные:\n\nФИО\nАдрес ближ ПВЗ СДЭК\n\nКорзина:\n${formattedCart}\n\nКонтактные данные:\nИмя: ${formData.lastName || "Не указано"}\nТелефон: +${formData.phoneNumber}\nTelegram: ${telegramUsername}\nАдрес доставки:\nГород: ${formData.city || "Не указан"}\nАдрес: ${formData.streetAddress || "Не указан"}`;
       }
 
-      // 3. Сохраняем заказ в localStorage как резервную копию
+      // 5. Сохраняем заказ в localStorage как резервную копию
       const localOrder = {
         formData,
         cartItems,
@@ -656,11 +766,62 @@ ${formattedCart}
         site,
         telegramMessage,
         whatsappMessage,
+        orderCheck: { isFirstOrder, previousOrdersCount, checkSuccess },
       };
       localStorage.setItem("last_order_backup", JSON.stringify(localOrder));
 
-      // 4. Запускаем все остальные отправки параллельно (но не ждем их для пользователя)
+      // 6. Сохраняем заказ в базу данных
+      const saveToDb = async () => {
+        try {
+          const orderData = {
+            customer_name: formData.lastName.trim() || "Не указано",
+            phone_number: phoneE164,
+            is_delivery: selectedMethod === "delivery",
+            city:
+              formData.city.trim() ||
+              (selectedMethod === "delivery" ? "Не указано" : "Москва"),
+            total_amount: totalPrice,
+            address:
+              formData.streetAddress.trim() ||
+              (selectedMethod === "delivery" ? "Не указано" : "Самовывоз"),
+            ordered_items: cartItems.map((item) => ({
+              product_name: `${item.name} (${item.type || "обычный"})`,
+              quantity: item.quantity,
+              price_at_time_of_order: item.price,
+            })),
+            is_first_order: checkSuccess ? (isFirstOrder ? 1 : 0) : 1,
+            check_error: checkError || null,
+          };
+
+          console.log("Saving to database...");
+          const response = await fetch("/api/orders", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderData),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log("SUCCESS: Database saved", result);
+            return true;
+          } else {
+            const errorText = await response.text();
+            console.warn("WARNING: Database save failed:", errorText);
+            return false;
+          }
+        } catch (error) {
+          console.warn("WARNING: Database error:", error);
+          return false;
+        }
+      };
+
+      // 7. Запускаем все остальные отправки параллельно (но не ждем их для пользователя)
       const sendPromises = [];
+
+      // Сохранение в базу данных
+      sendPromises.push(saveToDb());
 
       // Email отправка
       sendPromises.push(
@@ -719,13 +880,13 @@ ${formattedCart}
           console.log("Error in background sends:", error);
         });
 
-      // 5. ВСЕГДА показываем успех пользователю (Telegram уже отправлен или пытался отправиться)
+      // 8. ВСЕГДА показываем успех пользователю (Telegram уже отправлен или пытался отправиться)
       console.log("Order processing completed");
       alert(
         "✅ Ваш заказ был отправлен!\nВ ближайшее время с вами свяжется наш менеджер.",
       );
 
-      // 6. Очищаем корзину и перенаправляем
+      // 9. Очищаем корзину и перенаправляем
       clearCart();
       setTimeout(() => {
         window.location.href = "/";
