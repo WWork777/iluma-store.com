@@ -746,7 +746,26 @@
   }
   .product-button {
     padding: 2px 6px !important;
-    font-size: 9px !important;
+    font-size: 12px !important;
+  }
+  .product-price {
+    font-size: 12px !important;
+  }
+  .sort {
+    margin: 0 !important;
+  }
+  .product-info {
+    padding: 4px !important;
+  }
+  .product-name {
+    padding: 4px !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .product-button {
+    padding: 2px 6px !important;
+    font-size: 10px !important;
   }
   .product-price {
     font-size: 10px !important;
