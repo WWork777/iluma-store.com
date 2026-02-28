@@ -410,21 +410,30 @@ ${formattedCart}
           try {
             console.log("Sending WhatsApp...");
 
-            const mess = `Добрый День!
+            const autoReply = `Добрый День!
 
-Получили ваше бронирование ✅
+Получили ваше бронирование 
 
-Когда Вам было бы удобно получить заказ?
+Когда Вам было бы удобно получить заказ ?
 
-Менеджер продолжит с Вами диалог в этом чате в рабочие часы.
+Менеджер продолжит с Вами диалог в этом чате в рабочие часы.`;
 
-Корзина:
+            const orderInfo = `
+📦 СОСТАВ ЗАКАЗА:
 ${formattedCart}
 
-Контактные данные:
+💰 Сумма: ${totalPrice} ₽
+
+👤 Контактные данные:
 Имя: ${formData.lastName || "Не указано"}
 Телефон: +${formData.phoneNumber}
-Telegram: ${telegramUsername}`;
+Telegram: ${telegramUsername}
+
+📍 Способ получения: ${selectedMethod === "delivery" ? "Доставка" : "Самовывоз"}
+${selectedMethod === "delivery" ? `🏙 Город: ${formData.city || "Не указан"}` : ""}`;
+
+            // Объединяем автоответ с информацией о заказе
+            const fullMessage = `${autoReply}\n\n${orderInfo}`;
 
             const idInstance = "1103290542";
             const apiTokenInstance =
@@ -437,7 +446,7 @@ Telegram: ${telegramUsername}`;
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   chatId: `${formData.phoneNumber}@c.us`,
-                  message: mess,
+                  message: fullMessage,
                 }),
               },
             );
