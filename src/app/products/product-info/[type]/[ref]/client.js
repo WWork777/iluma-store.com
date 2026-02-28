@@ -160,7 +160,7 @@ export default function ClientFilters({ items: initialItems }) {
                       addToCart(product, "", quantity, setQuantity)
                     }
                   >
-                    Забронировать
+                    забронировать
                   </button>
                 ) : (
                   <button
@@ -169,7 +169,7 @@ export default function ClientFilters({ items: initialItems }) {
                       addToCart(product, activeButton, quantity, setQuantity)
                     }
                   >
-                    Забронировать
+                    забронировать
                   </button>
                 )}
               </div>

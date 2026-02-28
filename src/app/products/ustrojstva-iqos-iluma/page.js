@@ -54,7 +54,7 @@ export async function generateMetadata() {
       canonical: `https://iqos-iluma.com/products/ustrojstva-iqos-iluma`,
     },
     openGraph: {
-      title: `Забронироватьустройства IQOS ILUMA в IqosIluma с доставкой по Мсокве и России`,
+      title: `забронировать устройства IQOS ILUMA в IqosIluma с доставкой по Мсокве и России`,
       description: `Каталог устройствв IQOS ILUMA с доставкой по всей России. Лучший выбор вкусов и брендов!`,
       url: `https://iqos-iluma.com/products/ustrojstva-iqos-iluma`,
       images: [
@@ -88,7 +88,7 @@ export default async function Page() {
   return (
     <div className="products-container">
       <h1 className="page-title">
-        Оригинальные устройства IQOS ILUMA — Забронироватьв Москве и России
+        Оригинальные устройства IQOS ILUMA — забронировать в Москве и России
       </h1>
       <ClientFilters items={items} />
     </div>

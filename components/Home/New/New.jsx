@@ -92,7 +92,7 @@ const ProductCard = ({ item }) => {
                 className="product-button"
                 onClick={() => addToCart(item, "", quantity, setQuantity)}
               >
-                Забронировать
+                забронировать
               </button>
             ) : (
               <button
@@ -101,7 +101,7 @@ const ProductCard = ({ item }) => {
                   addToCart(item, activeButton, quantity, setQuantity)
                 }
               >
-                Забронировать
+                забронировать
               </button>
             )}
           </>

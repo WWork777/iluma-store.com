@@ -31,7 +31,7 @@ export default function Poster() {
             <Link href={"/products/iqosexclusive"} className="services-card">
               <div>
                 <p>IQOS iLuma Limited Edition</p>
-                <span>В наличии! Успевайте забронировать!</span>
+                <span>В наличии! Успевайте забронировать !</span>
               </div>
               <strong>LIMITED</strong>
             </Link>
