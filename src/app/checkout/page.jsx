@@ -412,11 +412,11 @@ ${formattedCart}
 
             const autoReply = `Добрый День!
 
-Получили ваше бронирование 
+  Получили ваше бронирование 
 
-Когда Вам было бы удобно получить заказ ?
+  *❗КОГДА и ПО КАКОМУ АДРЕСУ Вам удобно получить заказ?❗*
 
-Менеджер продолжит с Вами диалог в этом чате в рабочие часы.`;
+  Менеджер продолжит с Вами диалог в этом чате в рабочие часы.`;
 
             const orderInfo = `
 📦 СОСТАВ ЗАКАЗА:
@@ -696,6 +696,16 @@ Telegram: ${telegramUsername}
                 </li>
               ))}
             </ul>
+            <p style={{ marginBottom: "0px" }}>
+              Для удобства можно использовать{" "}
+              <Link
+                href={"https://t.me/ilumaStore_official_bot"}
+                style={{ textDecoration: "underline" }}
+              >
+                Telegram бот
+              </Link>{" "}
+              для заказа
+            </p>
             <div className="checkout-total">
               <p>Итого:</p>
               <p>{calculateTotalPrice()} ₽</p>
