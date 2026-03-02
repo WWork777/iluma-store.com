@@ -54,7 +54,7 @@ export async function generateMetadata() {
       canonical: `https://iqos-iluma.com/products/heets`,
     },
     openGraph: {
-      title: `забронировать стики Heets в IlumaPrime с доставкой по России`,
+      title: `Купить стики Heets в IlumaPrime с доставкой по России`,
       description: `Каталог стиков Heets с доставкой по всей России. Лучший выбор вкусов и брендов!`,
       url: `https://iqos-iluma.com/products/heets`,
       images: [
