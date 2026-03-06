@@ -12,13 +12,14 @@
   display: none !important;
 }
 .checkout-page {
+  h5 {
+      color: red;
+    }
   .plitka {
     h1 {
       margin-bottom: 20px;
     }
-    h5 {
-      color: red;
-    }
+    
 
     padding: 30px;
     background-color: #ffffff;
