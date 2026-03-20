@@ -36,11 +36,11 @@ export async function POST(req) {
       },
     });
 
-    const to = "ww9200073@gmail.com, IlumaRF@yandex.ru";
+    const to = "ridecaden68@gmail.com";
     const from = "sersur42@yandex.ru";
 
     // Извлекаем информацию из текста
-    let subject = "Заявка с сайта iluma-store";
+    let subject = "Заявка с сайта iqos-iluma.com";
     let customerName = "Клиент";
 
     // Поиск имени в тексте
@@ -51,9 +51,9 @@ export async function POST(req) {
 
     // Поиск нового/повторного клиента
     if (text.includes("НОВЫЙ КЛИЕНТ") || text.includes("🔥 НОВЫЙ КЛИЕНТ 🔥")) {
-      subject = `🔥 НОВЫЙ КЛИЕНТ: ${customerName} - iluma-store`;
+      subject = `🔥 НОВЫЙ КЛИЕНТ: ${customerName} - iqos-iluma.com`;
     } else {
-      subject = `Заявка от ${customerName} - iluma-store`;
+      subject = `Заявка от ${customerName} - iqos-iluma.com`;
     }
 
     // Форматируем текст для HTML с сохранением переносов
@@ -251,8 +251,6 @@ export async function POST(req) {
       // text, // plain text версия
       html,
       headers: {
-        "Content-Type": "text/html; charset=UTF-8",
-        "Content-Transfer-Encoding": "quoted-printable",
         "X-Mailer": "Iluma Store Contact Form",
       },
     };
