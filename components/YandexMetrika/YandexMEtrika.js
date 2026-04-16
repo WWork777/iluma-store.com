@@ -22,7 +22,7 @@ export default function YandexMetrika() {
         a.parentNode.insertBefore(k, a));
     })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-    ym(106461847, "init", {
+    ym(108569432, "init", {
       clickmap: true,
       trackLinks: true,
       accurateTrackBounce: true,
@@ -34,7 +34,7 @@ export default function YandexMetrika() {
     <noscript>
       <div>
         <img
-          src="https://mc.yandex.ru/watch/106461847"
+          src="https://mc.yandex.ru/watch/108569432"
           style={{ position: "absolute", left: "-9999px" }}
           alt=""
         />
