@@ -51,12 +51,12 @@ export async function generateMetadata() {
     description:
       "Стики Terea для Iqos Iluma. Большой выбор вкусов, доставка по России.",
     alternates: {
-      canonical: `https://iqos-iluma.com/products/stiki-terea-dlya-iqos-iluma`,
+      canonical: `https://iluma-store.com/products/stiki-terea-dlya-iqos-iluma`,
     },
     openGraph: {
       title: `Купить стики Terea в IlumaPrime с доставкой по России`,
       description: `Купить стики Terea с доставкой. Лучший выбор вкусов и брендов!`,
-      url: `https://iqos-iluma.com/products/stiki-terea-dlya-iqos-iluma`,
+      url: `https://iluma-store.com/products/stiki-terea-dlya-iqos-iluma`,
       images: [
         {
           url: `/favicon/web-app-manifest-512x512.png`,

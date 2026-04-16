@@ -23,7 +23,7 @@ async function safeFetch(url, options = {}) {
 async function fetchItems() {
   const baseUrl =
     process.env.NODE_ENV === "production" && typeof window === "undefined"
-      ? "http://localhost:3002"
+      ? "http://localhost:3010"
       : "";
 
   try {
@@ -51,12 +51,12 @@ export async function generateMetadata() {
     description:
       "Аксессуары для Iqos Iluma. Все для удобного и безопастного использования.",
     alternates: {
-      canonical: `https://iqos-iluma.com/products/aksesuary-dlya-iqos-iluma`,
+      canonical: `https://iluma-store.com/products/aksesuary-dlya-iqos-iluma`,
     },
     openGraph: {
       title: `Купить аксессуары для IQOS ILUMA в IlumaPrime с доставкой по России`,
       description: `Каталог аксессуаров для устройств IQOS ILUMA с доставкой по всей России. Лучший выбор вкусов и брендов!`,
-      url: `https://iqos-iluma.com/products/aksesuary-dlya-iqos-iluma`,
+      url: `https://iluma-store.com/products/aksesuary-dlya-iqos-iluma`,
       images: [
         {
           url: `/favicon/web-app-manifest-512x512.png`,

@@ -23,7 +23,7 @@ async function safeFetch(url, options = {}) {
 async function fetchItems() {
   const baseUrl =
     process.env.NODE_ENV === "production" && typeof window === "undefined"
-      ? "http://localhost:3002"
+      ? "http://localhost:3010"
       : "";
 
   try {
@@ -51,12 +51,12 @@ export async function generateMetadata() {
     description:
       "Каталог стиков Heets с доставкой по всей России. Лучший выбор вкусов и брендов!",
     alternates: {
-      canonical: `https://iqos-iluma.com/products/heets`,
+      canonical: `https://iluma-store.com/products/heets`,
     },
     openGraph: {
       title: `Купить стики Heets в IlumaPrime с доставкой по России`,
       description: `Каталог стиков Heets с доставкой по всей России. Лучший выбор вкусов и брендов!`,
-      url: `https://iqos-iluma.com/products/heets`,
+      url: `https://iluma-store.com/products/heets`,
       images: [
         {
           url: `/favicon/web-app-manifest-512x512.png`,

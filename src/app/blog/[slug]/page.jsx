@@ -28,12 +28,12 @@ export async function generateMetadata({ params }) {
       `Читайте статью "${article.title}" в блоге об IQOS Iluma и стиках Terea`,
     keywords: allKeywords.join(", "),
     alternates: {
-      canonical: `https://iqos-iluma.com/blog/${article.slug}`,
+      canonical: `https://iluma-store.com/blog/${article.slug}`,
     },
     openGraph: {
       title: article.title,
       description: article.metaDescription || article.description,
-      url: `https://iqos-iluma.com/blog/${article.slug}`,
+      url: `https://iluma-store.com/blog/${article.slug}`,
       type: "article",
       publishedTime: article.date,
       modifiedTime: article.updatedDate || article.date,
@@ -83,19 +83,19 @@ export default function ArticlePage({ params }) {
         "@type": "ListItem",
         position: 1,
         name: "Главная",
-        item: "https://iqos-iluma.com",
+        item: "https://iluma-store.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Блог",
-        item: "https://iqos-iluma.com/blog",
+        item: "https://iluma-store.com/blog",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: article.title,
-        item: `https://iqos-iluma.com/blog/${article.slug}`,
+        item: `https://iluma-store.com/blog/${article.slug}`,
       },
     ],
   };
@@ -112,19 +112,19 @@ export default function ArticlePage({ params }) {
     author: {
       "@type": "Person",
       name: article.author || "Эксперт IQOS",
-      url: "https://iqos-iluma.com",
+      url: "https://iluma-store.com",
     },
     publisher: {
       "@type": "Organization",
       name: "IQOS Iluma Store",
       logo: {
         "@type": "ImageObject",
-        url: "https://iqos-iluma.com/logo.png",
+        url: "https://iluma-store.com/logo.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://iqos-iluma.com/blog/${article.slug}`,
+      "@id": `https://iluma-store.com/blog/${article.slug}`,
     },
   };
 

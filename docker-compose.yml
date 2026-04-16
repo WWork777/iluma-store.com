@@ -3,20 +3,20 @@ version: "3"
 services:
   app:
     build: .
-    container_name: iqos-iluma-com-app
+    container_name: iluma-store-com-app
     restart: always
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=iqos-iluma.com, www.iqos-iluma.com
-      - LETSENCRYPT_HOST=iqos-iluma.com, www.iqos-iluma.com
+      - VIRTUAL_HOST=iluma-store.com, www.iluma-store.com
+      - LETSENCRYPT_HOST=iluma-store.com, www.iluma-store.com
       - LETSENCRYPT_EMAIL=parsh@gmail.com
-      - REDIRECT_www.iqos-iluma.com=iqos-iluma.com
+      - REDIRECT_www.iluma-store.com=iluma-store.com
     networks:
       - web
     volumes:
       # Все сайты используют одну и ту же папку с картинками
       - /var/www/iluma-store.ru/images:/app/public/images:ro
-      # - /var/www/iqos-iluma.com/.next:/app/.next
+      # - /var/www/iluma-store.com/.next:/app/.next
 
 networks:
   web:

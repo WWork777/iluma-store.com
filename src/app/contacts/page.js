@@ -7,12 +7,12 @@ export const metadata = {
   description:
     "Свяжитесь с магазином устройствв IQOS ILUMA и стики Terea – только оригинальная продукция. Быстрая доставка по всей России и скидки для постоянных клиентов.",
   alternates: {
-    canonical: `https://iqos-iluma.com/contacts`,
+    canonical: `https://iluma-store.com/contacts`,
   },
   openGraph: {
     title: `Контакты | IqosIluma`,
     description: `Свяжитесь с магазином устройствв IQOS ILUMA и стики Terea – только оригинальная продукция. Быстрая доставка по всей России и скидки для постоянных клиентов.`,
-    url: `https://iqos-iluma.com/contacts`,
+    url: `https://iluma-store.com/contacts`,
     images: [
       {
         url: `/favicon/web-app-manifest-512x512`,

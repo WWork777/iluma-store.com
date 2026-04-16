@@ -23,7 +23,7 @@ async function safeFetch(url, options = {}) {
 async function fetchItems(type, ref) {
   const baseUrl =
     process.env.NODE_ENV === "production" && typeof window === "undefined"
-      ? "http://localhost:3002"
+      ? "http://localhost:3010"
       : "http://localhost:3000";
 
   try {
@@ -48,12 +48,12 @@ export async function generateMetadata({ params }) {
       title: `Купить ${items.name} с доставкой по России`,
       description: items.description || `купить ${items.name}`,
       alternates: {
-        canonical: `https://iqos-iluma.com/products/product-info/${type}/${ref}`,
+        canonical: `https://iluma-store.com/products/product-info/${type}/${ref}`,
       },
       openGraph: {
         title: `Купить ${items.name} с доставкой по России`,
         description: items.description || `купить ${items.name}`,
-        url: `https://iqos-iluma.com/products/product-info/${type}/${ref}`,
+        url: `https://iluma-store.com/products/product-info/${type}/${ref}`,
         images: [
           {
             url: items.image

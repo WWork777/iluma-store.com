@@ -23,7 +23,7 @@ async function safeFetch(url, options = {}) {
 async function fetchItems() {
   const baseUrl =
     process.env.NODE_ENV === "production" && typeof window === "undefined"
-      ? "http://localhost:3002"
+      ? "http://localhost:3010"
       : "";
 
   try {
@@ -52,12 +52,12 @@ export async function generateMetadata() {
     description:
       "Каталог устройств IQOS ILUMA с доставкой по всей России. Лучший выбор вкусов и брендов!",
     alternates: {
-      canonical: `https://iqos-iluma.com/products/iqosexclusive`,
+      canonical: `https://iluma-store.com/products/iqosexclusive`,
     },
     openGraph: {
       title: `Купить лимитированные устройства IQOS ILUMA в IqosIluma с доставкой по России`,
       description: `Каталог лимитированных устройствв IQOS ILUMA с доставкой по всей России. Лучший выбор вкусов и брендов!`,
-      url: `https://iqos-iluma.com/products/iqosexclusive`,
+      url: `https://iluma-store.com/products/iqosexclusive`,
       images: [
         {
           url: `/favicon/web-app-manifest-512x512.png`,

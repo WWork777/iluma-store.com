@@ -13,19 +13,19 @@ export const metadata = {
   keywords:
     "блог IQOS, обзор Iluma, инструкция Terea, новости IQOS, сравнение стиков, уход за IQOS, отзывы Iluma",
   alternates: {
-    canonical: "https://iqos-iluma.com/blog",
+    canonical: "https://iluma-store.com/blog",
   },
   openGraph: {
     title: "Блог о IQOS Iluma | Полезные материалы и инструкции",
     description:
       "Читайте экспертные статьи: как пользоваться IQOS Iluma, обзоры новых моделей, сравнение вкусов Terea, ответы на частые вопросы",
-    url: "https://iqos-iluma.com/blog",
+    url: "https://iluma-store.com/blog",
     type: "website",
     siteName: "IQOS Iluma | Блог",
     locale: "ru_RU",
     images: [
       {
-        url: "https://iqos-iluma.com/images/blog-og-image.jpg",
+        url: "https://iluma-store.com/images/blog-og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Блог об IQOS Iluma и стиках Terea",
@@ -37,7 +37,7 @@ export const metadata = {
     title: "Блог об IQOS Iluma — полезные материалы",
     description:
       "Инструкции, обзоры и советы по использованию IQOS Iluma и стиков Terea",
-    images: ["https://iqos-iluma.com/images/blog-twitter-card.jpg"],
+    images: ["https://iluma-store.com/images/blog-twitter-card.jpg"],
   },
   robots: {
     index: true,

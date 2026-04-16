@@ -11,21 +11,21 @@ import Reviews from "../../components/Home/Reviews/Reviews";
 import ModalManager from "../../components/ModalManager/ModalManager";
 
 export const metadata = {
-  title: "IQOS купить Москва | IQOS ILUMA",
+  title: "IQOS ILUMA купить Москва | IQOS ILUMA",
   description:
     "IQOS ILUMA - купить оригинальные устройства и стики в Москве. Гарантия, проверенное качество, доставка.",
   alternates: {
-    canonical: "https://iqos-iluma.com",
+    canonical: "https://iluma-store.com",
   },
   openGraph: {
-    title: "IQOS купить Москва | IQOS ILUMA",
+    title: "IQOS ILUMA купить Москва | IQOS ILUMA",
     description:
       "IQOS ILUMA - купить оригинальные устройства и стики в Москве. Гарантия, проверенное качество, доставка.",
-    url: "https://iqos-iluma.com",
+    url: "https://iluma-store.com",
     type: "website",
     images: [
       {
-        url: "https://iqos-iluma.com/favicon/og-image.png",
+        url: "https://iluma-store.com/favicon/og-image.png",
         width: 512,
         height: 512,
         alt: "Iluma Store — IQOS Iluma и стики Terea",
@@ -37,7 +37,7 @@ export const metadata = {
     title: "IQOS купить Москва | IQOS ILUMA",
     description:
       "IQOS ILUMA - купить оригинальные устройства и стики в Москве. Гарантия, проверенное качество, доставка.",
-    images: ["https://iqos-iluma.com/favicon/og-image.png"],
+    images: ["https://iluma-store.com/favicon/og-image.png"],
   },
 };
 
@@ -46,7 +46,7 @@ const storeJsonLd = {
   "@context": "https://schema.org",
   "@type": "Store",
   name: "IQOS Iluma Store",
-  url: "https://iqos-iluma.com",
+  url: "https://iluma-store.com",
   description:
     "Официальный магазин IQOS Iluma и стиков Terea с доставкой по России",
   address: {
@@ -68,7 +68,7 @@ const featuredProductJsonLd = {
   "@context": "https://schema.org",
   "@type": "Product",
   name: "IQOS ILUMA PRIME",
-  image: "https://iqos-iluma.com/images/iluma-prime.jpg",
+  image: "https://iluma-store.com/images/iluma-prime.jpg",
   description:
     "Устройство IQOS ILUMA PRIME - инновационная система нагревания табака",
   brand: {
@@ -83,7 +83,7 @@ const featuredProductJsonLd = {
   },
   offers: {
     "@type": "Offer",
-    url: "https://iqos-iluma.com/product/iluma-prime",
+    url: "https://iluma-store.com/product/iluma-prime",
     priceCurrency: "RUB",
     price: "14990",
     availability: "https://schema.org/InStock",

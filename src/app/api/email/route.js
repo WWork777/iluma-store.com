@@ -40,7 +40,7 @@ export async function POST(req) {
     const from = "sersur42@yandex.ru";
 
     // Извлекаем информацию из текста
-    let subject = "Заявка с сайта iqos-iluma.com";
+    let subject = "Заявка с сайта iluma-store.com";
     let customerName = "Клиент";
 
     // Поиск имени в тексте
@@ -51,9 +51,9 @@ export async function POST(req) {
 
     // Поиск нового/повторного клиента
     if (text.includes("НОВЫЙ КЛИЕНТ") || text.includes("🔥 НОВЫЙ КЛИЕНТ 🔥")) {
-      subject = `🔥 НОВЫЙ КЛИЕНТ: ${customerName} - iqos-iluma.com`;
+      subject = `🔥 НОВЫЙ КЛИЕНТ: ${customerName} - iluma-store.com`;
     } else {
-      subject = `Заявка от ${customerName} - iqos-iluma.com`;
+      subject = `Заявка от ${customerName} - iluma-store.com`;
     }
 
     // Форматируем текст для HTML с сохранением переносов
@@ -164,7 +164,7 @@ export async function POST(req) {
         <body>
           <div class="email-container">
             <div class="email-header">
-              <h2>Заявка с сайта iqos-iluma.com</h2>
+              <h2>Заявка с сайта iluma-store.com</h2>
             </div>
             
             <div class="email-content">
@@ -229,7 +229,7 @@ export async function POST(req) {
               </div>
               
               <div class="footer">
-                <p>Отправлено с сайта iqos-iluma.com</p>
+                <p>Отправлено с сайта iluma-store.com</p>
                 <p>${new Date().toLocaleString("ru-RU", {
                   year: "numeric",
                   month: "long",
